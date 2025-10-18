@@ -1,5 +1,8 @@
+import { MainNav } from "@/components/main-nav"
+import { HeroMatchFinder } from "@/components/hero-match-finder"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { ContainerTextFlip } from "@/components/ui/container-text-flip"
 import {
   Card,
   CardContent,
@@ -43,63 +46,40 @@ const testimonials = [
 export default function TennisLandingPage() {
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 border-b bg-card/50 backdrop-blur-sm">
-        <div className="container mx-auto flex items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-2">
-            <div className="flex size-8 items-center justify-center rounded-lg bg-primary">
-              <Trophy className="size-5 text-primary-foreground" />
-            </div>
-            <span className="text-lg font-semibold">TennisMatch</span>
-          </div>
-          <nav className="hidden items-center gap-6 md:flex">
-            <a
-              href="#features"
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Features
-            </a>
-            <a
-              href="#how-it-works"
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              How It Works
-            </a>
-            <a
-              href="#testimonials"
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Testimonials
-            </a>
-          </nav>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm">
-              Sign In
-            </Button>
-            <Button size="sm">Get Started</Button>
-          </div>
-        </div>
-      </header>
+      <MainNav />
 
-      <section className="container mx-auto px-4 py-20 md:py-32">
-        <div className="mx-auto max-w-4xl space-y-6 text-center">
-          <Badge variant="secondary" className="mb-2 gap-1">
-            <Star className="size-3" />
-            Join 10,000+ Tennis Players
-          </Badge>
-          <h1 className="text-balance">Find Your Perfect Tennis Partner</h1>
-          <p className="mx-auto max-w-2xl text-pretty text-lg text-muted-foreground md:text-xl">
-            Connect with local tennis players, book courts, and improve your game. Whether you&apos;re a beginner or pro,
-            find matches that fit your skill level.
-          </p>
-          <div className="flex flex-col items-center justify-center gap-3 pt-4 sm:flex-row">
-            <Button size="lg" className="w-full gap-2 sm:w-auto">
-              Start Playing Today
-              <ArrowRight className="size-4" />
-            </Button>
-            <Button size="lg" variant="outline" className="w-full bg-transparent sm:w-auto">
-              Watch Demo
-            </Button>
+      <section className="container mx-auto px-4 pt-32 pb-20 md:pt-40 md:pb-32">
+        <div className="mx-auto flex max-w-6xl flex-col gap-12">
+          <div className="mx-auto max-w-3xl space-y-6 text-center">
+            <Badge variant="secondary" className="mx-auto mb-2 gap-1">
+              <Star className="size-3" />
+              Join 10,000+ Tennis Players
+            </Badge>
+            <h1 className="flex flex-col items-center gap-4 text-center text-4xl font-bold tracking-tight text-foreground md:flex-row md:flex-nowrap md:justify-center md:text-5xl lg:text-6xl">
+              <span className="whitespace-nowrap">Find Your Perfect</span>
+              <ContainerTextFlip
+                words={["Partner", "Match", "Rival", "Champion", "Pro"]}
+                interval={2400}
+                animationDuration={600}
+                className="align-middle border-border/60 bg-transparent font-semibold shadow-none text-inherit dark:border-border"
+                textClassName="tracking-tight"
+              />
+            </h1>
+            <p className="mx-auto max-w-2xl text-pretty text-lg text-muted-foreground md:text-xl lg:mx-0">
+              Connect with local tennis players, book courts, and improve your game. Whether you&apos;re a beginner or pro,
+              find matches that fit your skill level.
+            </p>
+            <div className="flex flex-col items-center justify-center gap-3 pt-4 sm:flex-row">
+              <Button size="lg" className="w-full gap-2 sm:w-auto">
+                Start Playing Today
+                <ArrowRight className="size-4" />
+              </Button>
+              <Button size="lg" variant="outline" className="w-full bg-transparent sm:w-auto">
+                Watch Demo
+              </Button>
+            </div>
           </div>
+          <HeroMatchFinder className="mx-auto w-full max-w-4xl lg:max-w-none" />
         </div>
       </section>
 
