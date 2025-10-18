@@ -1,360 +1,256 @@
-import { MainNav } from "@/components/main-nav"
-import { HeroMatchFinder } from "@/components/hero-match-finder"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { ContainerTextFlip } from "@/components/ui/container-text-flip"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  ArrowRight,
-  Calendar,
-  MapPin,
-  Star,
-  Trophy,
-  Users,
-} from "lucide-react"
+import Link from "next/link";
+import type { ReactNode } from "react";
+import { ArrowRight, Calendar, MapPin, Star, Trophy, Users } from "lucide-react";
+
+import { MainNav } from "@/components/main-nav";
+import { HeroMatchFinder } from "@/components/hero-match-finder";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ContainerTextFlip } from "@/components/ui/container-text-flip";
+import { createSupabaseServer } from "@/lib/supabase/server";
 
 const testimonials = [
   {
     quote:
-      "TennisMatch helped me find regular playing partners at my skill level. I've improved so much in just 3 months!",
-    initials: "SM",
+      "TennisMatch helped me find regular partners at my level. I’ve improved more in 3 months than the last year!",
     name: "Sarah Martinez",
     role: "Intermediate Player",
   },
   {
     quote:
-      "As someone new to the area, this app was perfect for meeting people and getting back into tennis. Highly recommend!",
-    initials: "JC",
+      "As someone new to the city, this app was perfect for meeting people and getting back into tennis.",
     name: "James Chen",
     role: "Advanced Player",
   },
   {
     quote:
-      "The court booking feature is a game changer. No more calling around - I can see availability and book instantly.",
-    initials: "EP",
+      "The court booking feature is a game changer. No more calling around – it’s instant and reliable.",
     name: "Emily Parker",
     role: "Beginner Player",
   },
-] as const
+];
 
-export default function TennisLandingPage() {
+export default async function Home() {
+  const supabase = await createSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const isSignedIn = Boolean(user);
+
+  const primaryCtaHref = isSignedIn ? "/profile" : "/sign-in?mode=up";
+  const primaryCtaLabel = isSignedIn ? "Go to Profile" : "Start Playing Today";
+  const secondaryCtaLabel = isSignedIn ? "Explore Features" : "Watch Demo";
+  const bottomPrimaryLabel = isSignedIn ? "Manage Profile" : "Create Free Account";
+  const bottomPrimaryHref = isSignedIn ? "/profile" : "/sign-in?mode=up";
+  const bottomSecondaryLabel = isSignedIn ? "Discover Features" : "Browse Community Events";
+  const bottomSecondaryHref = "#features";
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground">
       <MainNav />
 
-      <section className="container mx-auto px-4 pt-32 pb-20 md:pt-40 md:pb-32">
-        <div className="mx-auto flex max-w-6xl flex-col gap-12">
-          <div className="mx-auto max-w-3xl space-y-6 text-center">
-            <Badge variant="secondary" className="mx-auto mb-2 gap-1">
-              <Star className="size-3" />
-              Join 10,000+ Tennis Players
-            </Badge>
-            <h1 className="flex flex-col items-center gap-4 text-center text-4xl font-bold tracking-tight text-foreground md:flex-row md:flex-nowrap md:justify-center md:text-5xl lg:text-6xl">
-              <span className="whitespace-nowrap">Find Your Perfect</span>
-              <ContainerTextFlip
-                words={["Partner", "Match", "Rival", "Champion", "Pro"]}
-                interval={2400}
-                animationDuration={600}
-                className="align-middle border-border/60 bg-transparent font-semibold shadow-none text-inherit dark:border-border"
-                textClassName="tracking-tight"
+      <main className="space-y-24 pb-24 pt-28 md:pt-36 lg:pt-44">
+        <section className="container mx-auto px-4">
+          <div className="mx-auto flex max-w-5xl flex-col items-center gap-12">
+            <div className="flex flex-col items-center gap-6 text-center">
+              <Badge variant="secondary" className="gap-1">
+                <Star className="size-3" />
+                Join 10,000+ Tennis Players
+              </Badge>
+              <h1 className="flex flex-col items-center gap-4 text-center text-4xl font-bold tracking-tight md:flex-row md:flex-nowrap md:justify-center md:text-6xl">
+                <span className="whitespace-nowrap">Find Your Perfect</span>
+                <ContainerTextFlip
+                  words={["Partner", "Match", "Rival", "Champion", "Pro"]}
+                  interval={2600}
+                  animationDuration={600}
+                  className="align-middle border-border/60 bg-transparent font-semibold shadow-none text-inherit dark:border-border"
+                  textClassName="tracking-tight"
+                />
+              </h1>
+              <p className="max-w-2xl text-balance text-lg text-muted-foreground md:text-xl">
+                Connect with local tennis players, book courts, and improve your game. Whether you’re a beginner or a
+                seasoned competitor, TennisMatch finds partners that fit your schedule and skill level.
+              </p>
+              <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Button size="lg" className="w-full gap-2 sm:w-auto" asChild>
+                  <Link href={primaryCtaHref}>
+                    {primaryCtaLabel}
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="w-full bg-transparent sm:w-auto" asChild>
+                  <Link href="#features">{secondaryCtaLabel}</Link>
+                </Button>
+              </div>
+            </div>
+
+            <HeroMatchFinder className="w-full max-w-4xl lg:max-w-5xl" />
+          </div>
+        </section>
+
+        <section id="features" className="bg-muted/30 py-20">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto mb-12 max-w-3xl text-center">
+              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Everything You Need to Play</h2>
+              <p className="mt-4 text-lg text-muted-foreground">
+                TennisMatch brings partners, courts, and progress tracking into one experience. Plan matches and track
+                your improvement with ease.
+              </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <FeatureCard
+                icon={<Users className="size-6 text-primary" />}
+                title="Find Partners"
+                description="Match with players by skill, location, and availability using our smart pairing algorithm."
               />
-            </h1>
-            <p className="mx-auto max-w-2xl text-pretty text-lg text-muted-foreground md:text-xl lg:mx-0">
-              Connect with local tennis players, book courts, and improve your game. Whether you&apos;re a beginner or pro,
-              find matches that fit your skill level.
-            </p>
-            <div className="flex flex-col items-center justify-center gap-3 pt-4 sm:flex-row">
-              <Button size="lg" className="w-full gap-2 sm:w-auto">
-                Start Playing Today
-                <ArrowRight className="size-4" />
-              </Button>
-              <Button size="lg" variant="outline" className="w-full bg-transparent sm:w-auto">
-                Watch Demo
-              </Button>
+              <FeatureCard
+                icon={<Calendar className="size-6 text-primary" />}
+                title="Schedule Matches"
+                description="Coordinate matches instantly with calendar integration and quick invites."
+              />
+              <FeatureCard
+                icon={<MapPin className="size-6 text-primary" />}
+                title="Book Courts"
+                description="See real-time court availability and secure your booking in a few taps."
+              />
+              <FeatureCard
+                icon={<Trophy className="size-6 text-primary" />}
+                title="Track Progress"
+                description="Log scores, review match history, and visualize your skill growth over time."
+              />
+              <FeatureCard
+                icon={<Star className="size-6 text-primary" />}
+                title="Skill Ratings"
+                description="Balanced matches every time thanks to our dynamic rating system."
+              />
+              <FeatureCard
+                icon={<Users className="size-6 text-primary" />}
+                title="Community Events"
+                description="Join ladders, clinics, and local tournaments to grow your network."
+              />
             </div>
           </div>
-          <HeroMatchFinder className="mx-auto w-full max-w-4xl lg:max-w-none" />
-        </div>
-      </section>
+        </section>
 
-      <section id="features" className="container mx-auto bg-muted/30 px-4 py-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-12 text-center">
-            <h2 className="text-balance">Everything You Need to Play</h2>
-            <p className="mx-auto max-w-2xl text-pretty text-lg text-muted-foreground">
-              Our platform makes it easy to find partners, schedule matches, and track your progress.
-            </p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <div className="mb-4 flex size-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Users className="size-6 text-primary" />
-                </div>
-                <CardTitle>Find Partners</CardTitle>
-                <CardDescription>
-                  Match with players based on skill level, location, and availability. Our smart algorithm ensures
-                  compatible matches.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="mb-4 flex size-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Calendar className="size-6 text-primary" />
-                </div>
-                <CardTitle>Schedule Matches</CardTitle>
-                <CardDescription>
-                  Easily coordinate game times with built-in calendar integration. Send invites and get instant
-                  confirmations.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="mb-4 flex size-12 items-center justify-center rounded-lg bg-primary/10">
-                  <MapPin className="size-6 text-primary" />
-                </div>
-                <CardTitle>Book Courts</CardTitle>
-                <CardDescription>
-                  Find and reserve courts near you. View availability, pricing, and amenities all in one place.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="mb-4 flex size-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Trophy className="size-6 text-primary" />
-                </div>
-                <CardTitle>Track Progress</CardTitle>
-                <CardDescription>
-                  Monitor your improvement with match history, statistics, and performance insights over time.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="mb-4 flex size-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Star className="size-6 text-primary" />
-                </div>
-                <CardTitle>Skill Ratings</CardTitle>
-                <CardDescription>
-                  Get matched with players at your level. Our rating system ensures fair and competitive games.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="mb-4 flex size-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Users className="size-6 text-primary" />
-                </div>
-                <CardTitle>Community</CardTitle>
-                <CardDescription>
-                  Join local tennis groups, participate in tournaments, and connect with the tennis community.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      <section id="how-it-works" className="container mx-auto px-4 py-20">
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-12 text-center">
-            <h2 className="text-balance">Get Started in Minutes</h2>
-            <p className="text-pretty text-lg text-muted-foreground">Three simple steps to your next tennis match</p>
-          </div>
-
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="space-y-4 text-center">
-              <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">
-                1
-              </div>
-              <h3>Create Profile</h3>
-              <p className="text-pretty text-muted-foreground">
-                Set up your profile with skill level, location, and playing preferences
-              </p>
-            </div>
-
-            <div className="space-y-4 text-center">
-              <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">
-                2
-              </div>
-              <h3>Find Matches</h3>
-              <p className="text-pretty text-muted-foreground">
-                Browse compatible players and send match requests based on your schedule
-              </p>
-            </div>
-
-            <div className="space-y-4 text-center">
-              <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">
-                3
-              </div>
-              <h3>Start Playing</h3>
-              <p className="text-pretty text-muted-foreground">
-                Book a court, meet your partner, and enjoy your game
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="testimonials" className="container mx-auto bg-muted/30 px-4 py-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-12 text-center">
-            <h2 className="text-balance">Loved by Tennis Players</h2>
-            <p className="text-pretty text-lg text-muted-foreground">
-              See what our community has to say
+        <section id="how-it-works" className="container mx-auto px-4">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">How It Works</h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Getting on court takes just a couple of minutes.
             </p>
           </div>
+          <div className="mt-12 grid gap-8 md:grid-cols-3">
+            <StepCard
+              step="1"
+              title="Create your player profile"
+              description="Share your level, preferred play times, and favorite courts so we can personalize matches."
+            />
+            <StepCard
+              step="2"
+              title="Match instantly"
+              description="We recommend nearby players who match your availability—send invites with one tap."
+            />
+            <StepCard
+              step="3"
+              title="Play & track progress"
+              description="Log match results, see your stats, and keep leveling up with new partners."
+            />
+          </div>
+        </section>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            {testimonials.map((testimonial) => (
-              <Card key={testimonial.initials}>
-                <CardContent className="pt-6">
-                  <div className="mb-4 flex gap-1">
-                    {Array.from({ length: 5 }).map((_, starIndex) => (
-                      <Star key={starIndex} className="size-4 fill-primary text-primary" />
-                    ))}
-                  </div>
-                  <p className="mb-4 text-pretty text-sm">&ldquo;{testimonial.quote}&rdquo;</p>
-                  <div className="flex items-center gap-3">
-                    <div className="flex size-10 items-center justify-center rounded-full bg-muted font-semibold">
-                      {testimonial.initials}
-                    </div>
+        <section id="testimonials" className="bg-muted/30 py-20">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto max-w-3xl text-center">
+              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Loved by Local Players</h2>
+              <p className="mt-4 text-lg text-muted-foreground">
+                Players of every level use TennisMatch to keep their game sharp and meet new people.
+              </p>
+            </div>
+            <div className="mt-12 grid gap-6 md:grid-cols-3">
+              {testimonials.map((testimonial) => (
+                <Card key={testimonial.name} className="h-full border-none bg-card/70 shadow-md">
+                  <CardContent className="space-y-4 p-6">
+                    <p className="text-sm text-muted-foreground">{testimonial.quote}</p>
                     <div>
-                      <p className="text-sm font-medium">{testimonial.name}</p>
-                      <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                      <p className="font-semibold">{testimonial.name}</p>
+                      <p className="text-sm text-muted-foreground">{testimonial.role}</p>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="container mx-auto px-4 py-20">
-        <Card className="mx-auto max-w-4xl border-0 bg-primary text-primary-foreground">
-          <CardContent className="space-y-6 pt-12 text-center pb-12">
-            <h2 className="text-balance">Ready to Find Your Match?</h2>
-            <p className="mx-auto max-w-2xl text-pretty text-lg text-primary-foreground/90">
-              Join thousands of tennis players already using TennisMatch to improve their game and connect with the
-              community.
+        <section className="container mx-auto px-4">
+          <div className="rounded-3xl border bg-gradient-to-br from-primary/10 via-primary/5 to-primary/20 p-10 text-center shadow-lg">
+            <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
+              Ready for Your Next Match?
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Create your free profile, match with local players, and start improving today.
             </p>
-            <div className="flex flex-col items-center justify-center gap-3 pt-4 sm:flex-row">
-              <Button size="lg" variant="secondary" className="w-full gap-2 sm:w-auto">
-                Create Free Account
-                <ArrowRight className="size-4" />
+            <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Button size="lg" className="w-full gap-2 sm:w-auto" asChild>
+                <Link href={bottomPrimaryHref}>
+                  {bottomPrimaryLabel}
+                  <ArrowRight className="size-4" />
+                </Link>
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full bg-transparent text-primary-foreground sm:w-auto"
-              >
-                Learn More
+              <Button size="lg" variant="ghost" className="w-full sm:w-auto" asChild>
+                <Link href={bottomSecondaryHref}>{bottomSecondaryLabel}</Link>
               </Button>
             </div>
-          </CardContent>
-        </Card>
-      </section>
-
-      <footer className="bg-muted/30 border-t">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid gap-8 md:grid-cols-4">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <div className="flex size-8 items-center justify-center rounded-lg bg-primary">
-                  <Trophy className="size-5 text-primary-foreground" />
-                </div>
-                <span className="font-semibold">TennisMatch</span>
-              </div>
-              <p className="text-pretty text-sm text-muted-foreground">
-                Connecting tennis players worldwide for better matches and stronger communities.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="mb-4 font-semibold">Product</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Pricing
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    FAQ
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="mb-4 font-semibold">Company</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Careers
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="mb-4 font-semibold">Legal</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Privacy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Terms
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="transition-colors hover:text-foreground">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
           </div>
-
-          <div className="border-t pt-8 text-center text-sm text-muted-foreground mt-12">
-            <p>© 2025 TennisMatch. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+        </section>
+      </main>
     </div>
-  )
+  );
+}
+
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <Card className="border border-border/70 bg-card/60 shadow-sm">
+      <CardHeader>
+        <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-primary/10">
+          {icon}
+        </div>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+    </Card>
+  );
+}
+
+function StepCard({
+  step,
+  title,
+  description,
+}: {
+  step: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <Card className="border-none bg-card/70 shadow-md">
+      <CardHeader>
+        <div className="flex size-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+          {step}
+        </div>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground">{description}</p>
+      </CardContent>
+    </Card>
+  );
 }
