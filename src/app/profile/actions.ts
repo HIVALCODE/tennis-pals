@@ -24,7 +24,6 @@ export async function updateProfile(formData: FormData) {
   }
 
   const updates = {
-    id: user.id,
     display_name: getNullableString(formData, "display_name"),
     bio: getNullableString(formData, "bio"),
     location: getNullableString(formData, "location"),
@@ -33,12 +32,31 @@ export async function updateProfile(formData: FormData) {
     updated_at: new Date().toISOString(),
   };
 
-  const { error } = await supabase.from("profiles").upsert(updates, {
-    onConflict: "id",
-  });
+  const {
+    data: updatedProfile,
+    error: updateError,
+  } = await supabase
+    .from("profiles")
+    .update(updates)
+    .eq("id", user.id)
+    .select("id")
+    .maybeSingle();
 
-  if (error) {
-    throw new Error(error.message);
+  if (updateError && updateError.code !== "PGRST116") {
+    throw new Error(updateError.message);
+  }
+
+  if (!updatedProfile) {
+    const insertPayload = {
+      id: user.id,
+      ...updates,
+    };
+
+    const { error: insertError } = await supabase.from("profiles").insert(insertPayload);
+
+    if (insertError) {
+      throw new Error(insertError.message);
+    }
   }
 
   revalidatePath("/profile");
